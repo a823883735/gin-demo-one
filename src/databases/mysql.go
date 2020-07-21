@@ -1,6 +1,7 @@
 package databases
 
 import (
+	"gin-demo-one/src/libs"
 	"gin-demo-one/src/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
@@ -21,6 +22,8 @@ const (
 )
 
 func init() {
+	libs.Conf = libs.Conf
+	return
 	sqlConnStr := MYSQL_NAME + ":" + MYSQL_PWD
 	sqlConnStr += "@tcp(" + MYSQL_DEV_IP + ":" + MYSQL_PORT + ")/"
 	sqlConnStr += DATABASE_NAME

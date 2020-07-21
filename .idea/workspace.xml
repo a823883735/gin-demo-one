@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="721cca56-559b-42ed-8fe5-88aedc1e9507" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/config/config.ini" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/libs/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/databases/mysql.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/databases/mysql.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/tools.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/errorHandle.go" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,13 +20,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+            <state relative-caret-position="299">
+              <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
               <folding>
-                <element signature="e#14#63#0" expanded="true" />
+                <element signature="e#14#56#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -45,11 +46,11 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/databases/mysql.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="15" column="33" lean-forward="true" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+            <state relative-caret-position="851">
+              <caret line="37" column="22" lean-forward="true" selection-start-line="37" selection-start-column="22" selection-end-line="37" selection-end-column="22" />
               <folding>
                 <element signature="e#19#118#0" expanded="true" />
               </folding>
@@ -58,10 +59,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/libs/config.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="862">
+              <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+              <folding>
+                <element signature="e#14#56#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/config.ini">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="230">
+              <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/errorHandle.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="207">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
             </state>
           </provider>
         </entry>
@@ -85,8 +107,11 @@
         <option value="$PROJECT_DIR$/go.mod" />
         <option value="$PROJECT_DIR$/go.sum" />
         <option value="$PROJECT_DIR$/src/utils/tools.go" />
-        <option value="$PROJECT_DIR$/src/main.go" />
+        <option value="$PROJECT_DIR$/src/config/config.ini" />
+        <option value="$PROJECT_DIR$/src/libs/config.g0.go" />
         <option value="$PROJECT_DIR$/src/databases/mysql.go" />
+        <option value="$PROJECT_DIR$/src/libs/config.go" />
+        <option value="$PROJECT_DIR$/src/main.go" />
       </list>
     </option>
   </component>
@@ -110,8 +135,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -128,18 +151,20 @@
               <item name="gin-demo-one" type="b2602c69:ProjectViewProjectNode" />
               <item name="gin-demo-one" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="databases" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="gin-demo-one" type="b2602c69:ProjectViewProjectNode" />
               <item name="gin-demo-one" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -150,6 +175,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../PPGo_Api_Demo_Gin" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.vgo" />
@@ -194,7 +220,8 @@
       <updated>1594733874719</updated>
       <workItem from="1594733877527" duration="765000" />
       <workItem from="1594748787840" duration="1758000" />
-      <workItem from="1595240395763" duration="3547000" />
+      <workItem from="1595240395763" duration="3647000" />
+      <workItem from="1595351663131" duration="3098000" />
     </task>
     <task id="LOCAL-00001" summary="1.0.0.0.0">
       <created>1594734579668</created>
@@ -203,17 +230,31 @@
       <option name="project" value="LOCAL" />
       <updated>1594734579668</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="1.0.0.0.0">
+      <created>1595290475786</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1595290475786</updated>
+    </task>
+    <task id="LOCAL-00003" summary="1.0.0.0.0">
+      <created>1595290515293</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1595290515293</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6070000" />
+    <option name="totallyTimeSpent" value="9268000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-8" width="1096" height="1896" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23069498" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23552124" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -255,6 +296,27 @@
     <proxy>https://goproxy.cn</proxy>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/utils/errorHandle.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/工具/go/software/src/strings/strings.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="819" column="5" selection-start-line="819" selection-start-column="5" selection-end-line="819" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/go.mod">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
@@ -265,29 +327,32 @@
     <entry file="file://$PROJECT_DIR$/go.sum">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.go">
+    <entry file="file://$PROJECT_DIR$/src/databases/mysql.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        <state relative-caret-position="851">
+          <caret line="37" column="22" lean-forward="true" selection-start-line="37" selection-start-column="22" selection-end-line="37" selection-end-column="22" />
           <folding>
-            <element signature="e#14#63#0" expanded="true" />
+            <element signature="e#19#118#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/errorHandle.go">
+    <entry file="file://$PROJECT_DIR$/src/libs/config.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="862">
+          <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+          <folding>
+            <element signature="e#14#56#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/databases/mysql.go">
+    <entry file="file://$PROJECT_DIR$/src/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="15" column="33" lean-forward="true" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+        <state relative-caret-position="299">
+          <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
           <folding>
-            <element signature="e#19#118#0" expanded="true" />
+            <element signature="e#14#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
