@@ -1,15 +1,12 @@
 package main
 
 import (
+	//_ "gin-demo-one/src/databases"
 	"fmt"
-	_ "gin-demo-one/src/databases"
-	"gin-demo-one/src/libs"
+	"gin-demo-one/src/utils"
 )
 
 func main() {
 	//fmt.Println("Hello World")
-	var c libs.Configs
-	fmt.Println(c)
-	var con *libs.Configs
-	fmt.Println(con)
+	fmt.Println(utils.Md5([]byte("hello")))
 }
