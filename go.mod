@@ -5,7 +5,6 @@ go 1.12
 require (
 	cloud.google.com/go v0.37.0 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
-	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/denisenkom/go-mssqldb v0.0.0-20180707235734-242fa5aa1b45 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v0.0.0-20180719071942-99ff426eb706

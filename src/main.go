@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
