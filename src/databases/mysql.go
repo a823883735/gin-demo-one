@@ -10,18 +10,6 @@ import (
 
 var DB *xorm.Engine
 
-const (
-	DRIVER_NAME        = "mysql"
-	MYSQL_NAME         = "root"
-	MYSQL_PWD          = "toor"
-	MYSQL_DEV_IP       = "127.0.0.1"
-	MYSQL_PRO_IP       = "127.0.0.1"
-	MYSQL_PORT         = "3306"
-	DATABASE_NAME      = "book"
-	CONNECTION_SEETING = "charset=utf8"
-	//DATASOURCENAME	= "root:toor@tcp(127.0.0.1:3306)/book?charset=utf8"
-)
-
 func init() {
 	var err error
 	userName := libs.Conf.Read("mysql", "username")
@@ -32,6 +20,7 @@ func init() {
 	connStr := userName + ":" + password + "@tcp(" + host + ":" + port + ")/" + dataname + "?charset=utf8&parseTime=true"
 
 	DB, err = xorm.NewEngine("mysql", connStr)
+	DB.ShowSQL(true)
 	utils.ErrorHandle(err, "faild to open mysql connection")
 
 	maxIdleConns, err := strconv.ParseInt(libs.Conf.Read("mysql", "maxIdleConn"), 10, 0)

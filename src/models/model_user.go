@@ -1,11 +1,14 @@
 package models
 
-import "gin-demo-one/src/utils"
+import (
+	"gin-demo-one/src/databases"
+	"gin-demo-one/src/utils"
+)
 
 type User struct {
-	Id       string `xorm: "id" json:"id"`
-	Name     string `xorm: "name" json:"name"`
-	Password string `xorm: "password" json:"password"`
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 func (User) TableName() string {
@@ -13,5 +16,6 @@ func (User) TableName() string {
 }
 
 func init() {
-	utils.SyncTableStruct(User{})
+	err := databases.DB.Sync(new(User))
+	utils.ErrorHandle(err, "faild to sync format table of databases")
 }

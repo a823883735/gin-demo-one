@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"log"
-	"reflect"
 )
 
 func ErrorHandle(err error, str string) {
@@ -36,12 +35,4 @@ func VaildataPassword(pwd, hashPwd string) (result bool, err error) {
 		err = errors.New("verification failed.")
 	}
 	return
-}
-
-//同步表结构
-func SyncTableStruct(i interface{}) {
-	iType := reflect.TypeOf(i)
-	fmt.Println(iType)
-	//err = DB.Sync(new(iType))
-	//utils.ErrorHandle(err, "faild to sync format table of databases")
 }
