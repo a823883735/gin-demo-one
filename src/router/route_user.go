@@ -10,10 +10,10 @@ var userRouter *gin.RouterGroup
 func init() {
 	userRouter = Router.Group("/user")
 	{
-		userRouter.GET("/", controllers.GetUsers)
-		userRouter.POST("/", controllers.AddUser)
-		userRouter.DELETE("/", controllers.DeleteUser)
-		userRouter.PUT("/", controllers.UpdataUser)
+		userRouter.GET("/find", controllers.GetUsers)
+		userRouter.POST("/add", controllers.AddUser)
+		userRouter.DELETE("/delete", controllers.DeleteUser)
+		userRouter.PUT("/updata", controllers.UpdataUser)
 		userRouter.GET("/findUserById", controllers.SelectUser)
 		userRouter.POST("/login", controllers.Login)
 	}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"gin-demo-one/src/databases"
 	"gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
@@ -9,26 +10,45 @@ import (
 )
 
 func GetUsers(c *gin.Context) {
+	list := []models.User{}
+	page := NewPage(c.Query("pageNum"), c.Query("pageSize"))
+	//result, err := GetListSplitPage("select * from users", &list, c.Query("pageNum"), c.Query("pageSize"))
 	table := databases.DB.SQL("select * from users")
-
-	table = table.Limit(0, 4)
-	//var u models.User
-	var list []models.User
 	defer table.Close()
 	if err := table.Find(&list); err == nil {
+		table.Close()
+		total := len(list)
+		q := fmt.Sprint("select * from users limit ", page.PageNum-1, ",", page.PageSize)
+		list = []models.User{}
+		databases.DB.SQL(q).Find(&list)
+		page.GetListSplitPage(list, total, len(list))
 		c.JSONP(http.StatusOK, Result{
-			Code: 200, Data: Page{
-				List: list,
-			},
+			Code: 100,
+			Data: page,
 		})
-		count := len(list)
-		table.Limit(0, 4).Find(&list)
 	} else {
 		c.JSONP(http.StatusOK, Result{
 			Code: 100,
 			Msg:  "操作失败",
 		})
 	}
+	//var u models.User
+	//var list []models.User
+	//defer table.Close()
+	//if err := table.Find(&list); err == nil {
+	//	c.JSONP(http.StatusOK, Result{
+	//		Code: 200, Data: Page{
+	//			//List: list,
+	//		},
+	//	})
+	//	//count := len(list)
+	//	table.Limit(0, 4).Find(&list)
+	//} else {
+	//	c.JSONP(http.StatusOK, Result{
+	//		Code: 100,
+	//		Msg:  "操作失败",
+	//	})
+	//}
 
 	return
 	//rows, err := databases.DB.Rows(models.User{})

@@ -17,7 +17,7 @@ require (
 	github.com/lib/pq v0.0.0-20180523175426-90697d60dd84 // indirect
 	github.com/mattn/go-sqlite3 v1.9.0 // indirect
 	github.com/pkg/errors v0.8.0 // indirect
-	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/satori/go.uuid v1.2.0
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	github.com/ziutek/mymysql v0.0.0-20171217234033-ff6cc86d3d93 // indirect
 	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a
