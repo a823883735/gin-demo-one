@@ -19,12 +19,12 @@ func GetUsers(c *gin.Context) {
 	if err := table.Find(&list); err == nil {
 		table.Close()
 		total := len(list)
-		q := fmt.Sprint("select * from users limit ", page.PageNum-1, ",", page.PageSize)
+		q := fmt.Sprint("select * from users limit ", (page.PageNum-1)*page.PageSize, ",", page.PageSize)
 		list = []models.User{}
 		databases.DB.SQL(q).Find(&list)
 		page.GetListSplitPage(list, total, len(list))
 		c.JSONP(http.StatusOK, Result{
-			Code: 100,
+			Code: 200,
 			Data: page,
 		})
 	} else {
@@ -82,8 +82,8 @@ func UpdataUser(c *gin.Context) {
 
 func SelectUser(c *gin.Context) {
 	user := new(models.User)
-	user.Id = c.Param("id")
-	if _, err := databases.DB.Id(user.Id).Get(&user); err == nil {
+	user.Id = c.Query("id")
+	if _, err := databases.DB.Id(user.Id).Get(user); err == nil {
 		c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
 	} else {
 		c.JSONP(http.StatusOK, Result{Code: 100, Msg: "操作失败"})
