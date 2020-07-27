@@ -62,15 +62,15 @@ func (page *Page) GetListSplitPage(list interface{}, total, count int) {
 		page.NextPage = 1
 		page.PrePage = 1
 	} else {
-		p := (page.Total * 1.0) / (page.PageSize * 1.0)
-		a := float64(p)
-		b := math.Ceil(a)
-		b = b
-		page.Pages = int(math.Ceil(float64(page.Total / page.PageSize)))
+		page.Pages = int(math.Ceil(float64(page.Total) / float64(page.PageSize)))
 		page.LastPage = page.Pages
 		page.StartRow = (page.PageNum-1)*page.PageSize + 1
 		page.List = list
-		page.EndRow = page.StartRow + count - 1
+		if count == 0 {
+			page.EndRow = page.StartRow
+		} else {
+			page.EndRow = page.StartRow + count - 1
+		}
 		if page.EndRow < page.Total {
 			page.NextPage = page.PageNum + 1
 			page.IsLastPage = false

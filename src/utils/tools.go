@@ -30,8 +30,9 @@ func GeneratePassword(str string) (result string, err error) {
 
 //将明文字符串和随机加密hash比较, 验证有效性
 func VaildataPassword(pwd, hashPwd string) (result bool, err error) {
-	if err := bcrypt.CompareHashAndPassword([]byte(hashPwd), []byte(pwd)); err != nil {
-		result = false
+	if err := bcrypt.CompareHashAndPassword([]byte(hashPwd), []byte(pwd)); err == nil {
+		result = true
+	} else {
 		err = errors.New("verification failed.")
 	}
 	return

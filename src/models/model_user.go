@@ -3,12 +3,14 @@ package models
 import (
 	"gin-demo-one/src/databases"
 	"gin-demo-one/src/utils"
+	_ "github.com/go-xorm/xorm"
 )
 
 type User struct {
-	Id       string `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	Id       string `json:"id" xorm:"notnull pk varchar(50) 'id'"`
+	Name     string `json:"name" xorm:"varchar(12)"`
+	Phone    string `json:"phone" xorm:"notnull varchar(11)"`
+	Password string `json:"password" xorm:"notnull varchar(100)"`
 }
 
 func (User) TableName() string {
