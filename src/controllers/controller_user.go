@@ -14,7 +14,7 @@ func GetUsers(c *gin.Context) {
 	list := []models.User{}
 	page := NewPage(c.Query("pageNum"), c.Query("pageSize"))
 	//result, err := GetListSplitPage("select * from users", &list, c.Query("pageNum"), c.Query("pageSize"))
-	table := databases.DB.SQL("select * from users")
+	table := databases.DB.SQL("select sql_calc_found_rows * from users")
 	defer table.Close()
 	if err := table.Find(&list); err == nil {
 		table.Close()
