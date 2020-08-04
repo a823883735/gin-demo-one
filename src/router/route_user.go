@@ -10,6 +10,7 @@ var userRouter *gin.RouterGroup
 func init() {
 	userRouter = Router.Group("/user")
 	{
+		//获取人员列表
 		userRouter.GET("/find", controllers.GetUsers)
 		userRouter.POST("/add", controllers.AddUser)
 		userRouter.DELETE("/delete", controllers.DeleteUser)
