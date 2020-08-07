@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"gin-demo-one/src/controllers"
 	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,7 @@ var Router *gin.Engine
 func init() {
 	Router = gin.Default()
 	Router.Use(Cors())
+	Router.Use(IsLogin())
 	Router.GET("/mail", func(c *gin.Context) {
 		mailConn := map[string]string{
 			"user": "516948767@qq.com",
@@ -46,6 +48,19 @@ func init() {
 			})
 		}
 	})
+}
+
+func IsLogin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.Query("token")
+		fmt.Println("ClientIp: ", c.ClientIP())
+		if token != "" {
+			c.Next()
+		} else {
+			c.JSONP(http.StatusPermanentRedirect, controllers.Result{Code: 10000, Msg: "未登录"})
+			c.Abort()
+		}
+	}
 }
 
 func Cors() gin.HandlerFunc {

@@ -19,7 +19,7 @@ func GetUsers(c *gin.Context) {
 	if err := table.Find(&list); err == nil {
 		table.Close()
 		total := len(list)
-		q := fmt.Sprint("select * from users limit ", (page.PageNum-1)*page.PageSize, ",", page.PageSize)
+		q := fmt.Sprint("select id, name, phone,'' password from users limit ", (page.PageNum-1)*page.PageSize, ",", page.PageSize)
 		list = []models.User{}
 		databases.DB.SQL(q).Find(&list)
 		page.GetListSplitPage(list, total, len(list))
