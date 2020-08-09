@@ -1,66 +1,21 @@
 package router
 
 import (
-	"fmt"
-	"gin-demo-one/src/controllers"
 	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/gomail.v2"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/swaggo/gin-swagger/example/basic/docs"
 	"net/http"
-	"strconv"
 )
 
 var Router *gin.Engine
 
 func init() {
 	Router = gin.Default()
+	swaggerUrl := ginSwagger.URL("http://localhost:8080/swagger/doc.json")
+	Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerUrl))
 	Router.Use(Cors())
-	Router.Use(IsLogin())
-	Router.GET("/mail", func(c *gin.Context) {
-		mailConn := map[string]string{
-			"user": "516948767@qq.com",
-			"pass": "sprzkxacqdhabhcc",
-			"host": "smtp.qq.com",
-			"port": "465", //587
-		}
-		port, _ := strconv.Atoi(mailConn["port"])
-
-		m := gomail.NewMessage()
-
-		m.SetHeader("From", m.FormatAddress(mailConn["user"], "测试"))
-
-		m.SetHeader("To", "823883735@qq.com")
-		m.SetHeader("Subject", "邮箱测试")
-		var text = c.Query("text")
-		m.SetBody("text/html", text)
-
-		d := gomail.NewDialer(mailConn["host"], port, mailConn["user"], mailConn["pass"])
-
-		if err := d.DialAndSend(m); err == nil {
-			c.JSONP(http.StatusOK, controllers.Result{
-				Code: 200,
-				Data: "success",
-			})
-		} else {
-			c.JSONP(http.StatusOK, controllers.Result{
-				Code: 100,
-				Msg:  "faild",
-			})
-		}
-	})
-}
-
-func IsLogin() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token := c.Query("token")
-		fmt.Println("ClientIp: ", c.ClientIP())
-		if token != "" {
-			c.Next()
-		} else {
-			c.JSONP(http.StatusPermanentRedirect, controllers.Result{Code: 10000, Msg: "未登录"})
-			c.Abort()
-		}
-	}
 }
 
 func Cors() gin.HandlerFunc {
