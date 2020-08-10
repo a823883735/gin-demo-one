@@ -1,10 +1,15 @@
 package router
 
 import (
+	"encoding/base64"
+	"fmt"
 	"gin-demo-one/src/controllers"
 	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
+	"github.com/wumansgy/goEncrypt"
 	"net/http"
+	"strings"
+	"time"
 )
 
 var Router *gin.Engine
@@ -35,7 +40,8 @@ func Cors() gin.HandlerFunc {
 }
 
 var IGNORE_PATH = [...]string{"/user/login", "/user/register", "/user/find"}
-var PUBLIC_KEY = "token"
+var PUBLIC_KEY = "@t0!K1nl"
+var PUBLIC_KEY_BYTE_ARRAY = []byte{64,116,48,33,75,49,110,108}
 
 func IsLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -59,8 +65,49 @@ func IsLogin() gin.HandlerFunc {
 			})
 			c.Abort()
 		} else {
-			//timeStatmp, err := rsa.DecryptPKCS1v15(io.Reader{}, byte[](PUBLIC_KEY),timestamp.Timestamp{} )
+			//str, _ := goEncrypt.DesCbcEncrypt([]byte("010f0aea-b5d8-45ef-a27c-148365fc1e53"), []byte(PUBLIC_KEY))
+			//strText := string(str)
+			//fmt.Println(strText)
+			decodePlainText, _ := base64.StdEncoding.DecodeString(token)
+			plainText, err := goEncrypt.DesCbcDecrypt(decodePlainText, PUBLIC_KEY_BYTE_ARRAY)
+			plainTextStr := string(plainText)
+			index := strings.Index(plainTextStr, "&")
+			if err != nil ||  index < 0 {
+				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
+					Code: 9999,
+					Msg: "非法token",
+				})
+				c.Abort()
+				return
+			}
+
+			//timeStamp := plainTextStr[index:]
+			fmt.Println(time.Now().Format(plainTextStr[index:]))
+			if index := strings.Index(plainTextStr, "&"); index < 0 {
+				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
+					Code: 10001,
+					Msg: "token过期",
+				})
+				c.Abort()
+				return
+			}
+
+			//fmt.Println()
+			//fmt.Println("------------------------------")
+			//plainText := []byte("010f0aea-b5d8-45ef-a27c-148365fc1e53" + "&" + time.Stamp)
+			//fmt.Println([]byte(PUBLIC_KEY))
+			//fmt.Println("明文：", string(plainText))
+			//cryptText, _ := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
+			//fmt.Println("密文：", base64.StdEncoding.EncodeToString(cryptText))
+			//
+			//str, _ := base64.StdEncoding.DecodeString(base64.StdEncoding.EncodeToString(cryptText))
+			//fmt.Println("密文：", base64.StdEncoding.EncodeToString(str))
+			//newPlainText, _ := goEncrypt.DesCbcDecrypt(str, []byte("@t0!K1nl"))
+			//fmt.Println("明文：", string(newPlainText))
+			//fmt.Println("------------------------------")
 			c.Next()
 		}
 	}
 }
+//timeStamp := time.Unix(1597045523, 0)
+//fmt.Println(int(time.Since(timeStamp).Hours() / 24) < 7)
