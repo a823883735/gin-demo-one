@@ -2,12 +2,12 @@ package router
 
 import (
 	"encoding/base64"
-	"fmt"
 	"gin-demo-one/src/controllers"
 	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
 	"github.com/wumansgy/goEncrypt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -39,10 +39,6 @@ func Cors() gin.HandlerFunc {
 	}
 }
 
-var IGNORE_PATH = [...]string{"/user/login", "/user/register", "/user/find"}
-var PUBLIC_KEY = "@t0!K1nl"
-var PUBLIC_KEY_BYTE_ARRAY = []byte{64,116,48,33,75,49,110,108}
-
 func IsLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var token string
@@ -53,7 +49,7 @@ func IsLogin() gin.HandlerFunc {
 		}
 		if token == "" {
 			requestPath := c.FullPath()
-			for _, v := range IGNORE_PATH {
+			for _, v := range controllers.IGNORE_PATH {
 				if requestPath == v {
 					c.Next()
 					return
@@ -65,11 +61,8 @@ func IsLogin() gin.HandlerFunc {
 			})
 			c.Abort()
 		} else {
-			//str, _ := goEncrypt.DesCbcEncrypt([]byte("010f0aea-b5d8-45ef-a27c-148365fc1e53"), []byte(PUBLIC_KEY))
-			//strText := string(str)
-			//fmt.Println(strText)
 			decodePlainText, _ := base64.StdEncoding.DecodeString(token)
-			plainText, err := goEncrypt.DesCbcDecrypt(decodePlainText, PUBLIC_KEY_BYTE_ARRAY)
+			plainText, err := goEncrypt.DesCbcDecrypt(decodePlainText, controllers.PUBLIC_KEY_BYTE_ARRAY)
 			plainTextStr := string(plainText)
 			index := strings.Index(plainTextStr, "&")
 			if err != nil ||  index < 0 {
@@ -80,10 +73,9 @@ func IsLogin() gin.HandlerFunc {
 				c.Abort()
 				return
 			}
-
-			//timeStamp := plainTextStr[index:]
-			fmt.Println(time.Now().Format(plainTextStr[index:]))
-			if index := strings.Index(plainTextStr, "&"); index < 0 {
+			if timeStamp, _ := strconv.ParseInt(plainTextStr[index+1:], 10, 64); int(time.Since(time.Unix(timeStamp, 0)).Hours() / 24) < 7{
+				c.Next()
+			} else {
 				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
 					Code: 10001,
 					Msg: "token过期",
@@ -91,23 +83,28 @@ func IsLogin() gin.HandlerFunc {
 				c.Abort()
 				return
 			}
-
-			//fmt.Println()
-			//fmt.Println("------------------------------")
-			//plainText := []byte("010f0aea-b5d8-45ef-a27c-148365fc1e53" + "&" + time.Stamp)
-			//fmt.Println([]byte(PUBLIC_KEY))
-			//fmt.Println("明文：", string(plainText))
-			//cryptText, _ := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
-			//fmt.Println("密文：", base64.StdEncoding.EncodeToString(cryptText))
-			//
-			//str, _ := base64.StdEncoding.DecodeString(base64.StdEncoding.EncodeToString(cryptText))
-			//fmt.Println("密文：", base64.StdEncoding.EncodeToString(str))
-			//newPlainText, _ := goEncrypt.DesCbcDecrypt(str, []byte("@t0!K1nl"))
-			//fmt.Println("明文：", string(newPlainText))
-			//fmt.Println("------------------------------")
-			c.Next()
 		}
 	}
 }
+
+//str, _ := goEncrypt.DesCbcEncrypt([]byte("010f0aea-b5d8-45ef-a27c-148365fc1e53"), []byte(PUBLIC_KEY))
+//strText := string(str)
+//fmt.Println(strText)
+
+
 //timeStamp := time.Unix(1597045523, 0)
 //fmt.Println(int(time.Since(timeStamp).Hours() / 24) < 7)
+
+//fmt.Println()
+//fmt.Println("------------------------------")
+//plainText := []byte("010f0aea-b5d8-45ef-a27c-148365fc1e53" + "&" + time.Stamp)
+//fmt.Println([]byte(PUBLIC_KEY))
+//fmt.Println("明文：", string(plainText))
+//cryptText, _ := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
+//fmt.Println("密文：", base64.StdEncoding.EncodeToString(cryptText))
+//
+//str, _ := base64.StdEncoding.DecodeString(base64.StdEncoding.EncodeToString(cryptText))
+//fmt.Println("密文：", base64.StdEncoding.EncodeToString(str))
+//newPlainText, _ := goEncrypt.DesCbcDecrypt(str, []byte("@t0!K1nl"))
+//fmt.Println("明文：", string(newPlainText))
+//fmt.Println("------------------------------")
