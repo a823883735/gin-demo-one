@@ -86,6 +86,7 @@ func UpdataUser(c *gin.Context) {
 func SelectUser(c *gin.Context) {
 	user := new(models.User)
 	user.Id = c.Query("id")
+	//fmt.Println(c.Get("token"))
 	if _, err := databases.DB.Id(user.Id).Get(user); err == nil {
 		c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
 	} else {
@@ -102,7 +103,7 @@ func Login(c *gin.Context) {
 	if err == nil {
 		if ok, err := utils.VaildataPassword(pwd, user.Password); err == nil {
 			if ok {
-				plainText := []byte(fmt.Sprint("010f0aea-b5d8-45ef-a27c-148365fc1e53", "&", time.Now().Unix()))
+				plainText := []byte(fmt.Sprint(user.Id, "&", time.Now().Unix()))
 				cryptText, err := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
 				if err == nil {
 					c.JSONP(http.StatusOK, Result{
@@ -112,7 +113,7 @@ func Login(c *gin.Context) {
 				} else {
 					c.JSONP(http.StatusInternalServerError, Result{
 						Code: 500,
-						Msg: "服务器异常",
+						Msg:  "服务器异常",
 					})
 				}
 			} else {

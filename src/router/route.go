@@ -65,20 +65,21 @@ func IsLogin() gin.HandlerFunc {
 			plainText, err := goEncrypt.DesCbcDecrypt(decodePlainText, controllers.PUBLIC_KEY_BYTE_ARRAY)
 			plainTextStr := string(plainText)
 			index := strings.Index(plainTextStr, "&")
-			if err != nil ||  index < 0 {
+			if err != nil || index < 0 {
 				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
 					Code: 9999,
-					Msg: "非法token",
+					Msg:  "非法token",
 				})
 				c.Abort()
 				return
 			}
-			if timeStamp, _ := strconv.ParseInt(plainTextStr[index+1:], 10, 64); int(time.Since(time.Unix(timeStamp, 0)).Hours() / 24) < 7{
+			if timeStamp, _ := strconv.ParseInt(plainTextStr[index+1:], 10, 64); int(time.Since(time.Unix(timeStamp, 0)).Hours()/24) < 7 {
+				c.Set("token", plainTextStr[:index])
 				c.Next()
 			} else {
 				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
 					Code: 10001,
-					Msg: "token过期",
+					Msg:  "token过期",
 				})
 				c.Abort()
 				return
@@ -90,7 +91,6 @@ func IsLogin() gin.HandlerFunc {
 //str, _ := goEncrypt.DesCbcEncrypt([]byte("010f0aea-b5d8-45ef-a27c-148365fc1e53"), []byte(PUBLIC_KEY))
 //strText := string(str)
 //fmt.Println(strText)
-
 
 //timeStamp := time.Unix(1597045523, 0)
 //fmt.Println(int(time.Since(timeStamp).Hours() / 24) < 7)
