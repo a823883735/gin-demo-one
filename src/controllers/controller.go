@@ -90,3 +90,8 @@ func (page *Page) GetListSplitPage(list interface{}, total, count int) {
 		}
 	}
 }
+
+
+var IGNORE_PATH = [...]string{"/user/login", "/user/register", "/user/find"}
+var PUBLIC_KEY = "@t0!K1nl"
+var PUBLIC_KEY_BYTE_ARRAY = []byte{64,116,48,33,75,49,110,108}
