@@ -1,13 +1,16 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"fmt"
 	"gin-demo-one/src/databases"
 	"gin-demo-one/src/models"
 	"gin-demo-one/src/utils"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"github.com/wumansgy/goEncrypt"
 	"net/http"
+	"time"
 )
 
 func GetUsers(c *gin.Context) {
@@ -99,7 +102,19 @@ func Login(c *gin.Context) {
 	if err == nil {
 		if ok, err := utils.VaildataPassword(pwd, user.Password); err == nil {
 			if ok {
-				c.Redirect(http.StatusMovedPermanently, "/index.html")
+				plainText := []byte(fmt.Sprint("010f0aea-b5d8-45ef-a27c-148365fc1e53", "&", time.Now().Unix()))
+				cryptText, err := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
+				if err == nil {
+					c.JSONP(http.StatusOK, Result{
+						Code: 200,
+						Data: base64.StdEncoding.EncodeToString(cryptText),
+					})
+				} else {
+					c.JSONP(http.StatusInternalServerError, Result{
+						Code: 500,
+						Msg: "服务器异常",
+					})
+				}
 			} else {
 				c.JSONP(http.StatusOK, Result{Code: 100, Msg: "用户名与密码不匹配"})
 			}
