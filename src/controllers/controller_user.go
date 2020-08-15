@@ -1,126 +1,110 @@
-package controllers
+package router
 
 import (
 	"encoding/base64"
-	"fmt"
-	"gin-demo-one/src/databases"
-	"gin-demo-one/src/models"
-	"gin-demo-one/src/utils"
+	"gin-demo-one/src/controllers"
+	_ "gin-demo-one/src/models"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"github.com/wumansgy/goEncrypt"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
-func GetUsers(c *gin.Context) {
-	list := []models.User{}
-	page := NewPage(c.Query("pageNum"), c.Query("pageSize"))
-	//result, err := GetListSplitPage("select * from users", &list, c.Query("pageNum"), c.Query("pageSize"))
-	table := databases.DB.SQL("select sql_calc_found_rows * from users")
-	defer table.Close()
-	if err := table.Find(&list); err == nil {
-		table.Close()
-		total := len(list)
-		q := fmt.Sprint("select id, name, phone,'' password from users limit ", (page.PageNum-1)*page.PageSize, ",", page.PageSize)
-		list = []models.User{}
-		databases.DB.SQL(q).Find(&list)
-		page.GetListSplitPage(list, total, len(list))
-		c.JSONP(http.StatusOK, Result{
-			Code: 200,
-			Data: page,
-		})
-	} else {
-		c.JSONP(http.StatusOK, Result{
-			Code: 100,
-			Msg:  "操作失败",
-		})
-	}
-	return
+var Router *gin.Engine
+
+func init() {
+	Router = gin.Default()
+	Router.Use(IsLogin())
+	Router.Use(Cors())
 }
 
-func AddUser(c *gin.Context) {
-	var err error
-	user := new(models.User)
-	user.Phone = c.PostForm("phone")
-	user.Password = c.PostForm("pwd")
-	user.Password, err = utils.GeneratePassword(user.Password)
-	if err == nil {
-		u1 := uuid.Must(uuid.NewV4(), err)
-		user.Id = u1.String()
-		if _, err := databases.DB.Insert(user); err == nil {
-			c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
-			return
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization, Token")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
 		}
-	}
-	c.JSONP(http.StatusOK, Result{Code: 100, Msg: "操作失败"})
-}
-
-func DeleteUser(c *gin.Context) {
-	user := new(models.User)
-	user.Id = c.Param("id")
-	if _, err := databases.DB.Id(user.Id).Delete(&user); err == nil {
-		c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
-	} else {
-		c.JSONP(http.StatusOK, Result{Code: 100, Msg: "操作失败"})
+		// 处理请求
+		c.Next()
 	}
 }
 
-func UpdataUser(c *gin.Context) {
-	var err error
-	user := new(models.User)
-	user.Id = c.PostForm("id")
-	user.Phone = c.PostForm("phone")
-	user.Name = c.PostForm("name")
-	user.Password = c.PostForm("pwd")
-	user.Password, err = utils.GeneratePassword(user.Password)
-	if err == nil {
-		if _, err = databases.DB.Id(user.Id).Update(user); err == nil {
-			c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
-			return
+func IsLogin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var token string
+		if c.Request.Method == "POST" || c.Request.Method == "PUT" {
+			token = c.PostForm("token")
+		} else {
+			token = c.Query("token")
 		}
-	}
-	c.JSONP(http.StatusOK, Result{Code: 100, Msg: "操作失败"})
-}
-
-func SelectUser(c *gin.Context) {
-	user := new(models.User)
-	user.Id = c.Query("id")
-	//fmt.Println(c.Get("token"))
-	if _, err := databases.DB.Id(user.Id).Get(user); err == nil {
-		c.JSONP(http.StatusOK, Result{Code: 200, Data: user})
-	} else {
-		c.JSONP(http.StatusOK, Result{Code: 100, Msg: "操作失败"})
-	}
-}
-
-func Login(c *gin.Context) {
-	var err error
-	user := new(models.User)
-	user.Phone = c.PostForm("phone")
-	pwd := c.PostForm("pwd")
-	_, err = databases.DB.Where("phone=?", user.Phone).Get(user)
-	if err == nil {
-		if ok, err := utils.VaildataPassword(pwd, user.Password); err == nil {
-			if ok {
-				plainText := []byte(fmt.Sprint(user.Id, "&", time.Now().Unix()))
-				cryptText, err := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
-				if err == nil {
-					c.JSONP(http.StatusOK, Result{
-						Code: 200,
-						Data: base64.StdEncoding.EncodeToString(cryptText),
-					})
-				} else {
-					c.JSONP(http.StatusInternalServerError, Result{
-						Code: 500,
-						Msg:  "服务器异常",
-					})
+		if token == "" {
+			requestPath := c.FullPath()
+			for _, v := range controllers.IGNORE_PATH {
+				if requestPath == v {
+					c.Next()
+					return
 				}
-			} else {
-				c.JSONP(http.StatusOK, Result{Code: 100, Msg: "用户名与密码不匹配"})
 			}
-			return
+			c.JSONP(http.StatusPermanentRedirect, controllers.Result{
+				Code: 10000,
+				Msg:  "未登录",
+			})
+			c.Abort()
+		} else {
+			decodePlainText, _ := base64.StdEncoding.DecodeString(token)
+			plainText, err := goEncrypt.DesCbcDecrypt(decodePlainText, controllers.PUBLIC_KEY_BYTE_ARRAY)
+			plainTextStr := string(plainText)
+			index := strings.Index(plainTextStr, "&")
+			if err != nil || index < 0 {
+				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
+					Code: 9999,
+					Msg:  "非法token",
+				})
+				c.Abort()
+				return
+			}
+			if timeStamp, _ := strconv.ParseInt(plainTextStr[index+1:], 10, 64); int(time.Since(time.Unix(timeStamp, 0)).Hours()/24) < 7 {
+				c.Set("token", plainTextStr[:index])
+				c.Next()
+			} else {
+				c.JSONP(http.StatusPermanentRedirect, controllers.Result{
+					Code: 10001,
+					Msg:  "token过期",
+				})
+				c.Abort()
+				return
+			}
 		}
 	}
-	c.JSONP(http.StatusOK, Result{Code: 500, Msg: "服务器异常，请联系管理员"})
 }
+
+//str, _ := goEncrypt.DesCbcEncrypt([]byte("010f0aea-b5d8-45ef-a27c-148365fc1e53"), []byte(PUBLIC_KEY))
+//strText := string(str)
+//fmt.Println(strText)
+
+//timeStamp := time.Unix(1597045523, 0)
+//fmt.Println(int(time.Since(timeStamp).Hours() / 24) < 7)
+
+//fmt.Println()
+//fmt.Println("------------------------------")
+//plainText := []byte("010f0aea-b5d8-45ef-a27c-148365fc1e53" + "&" + time.Stamp)
+//fmt.Println([]byte(PUBLIC_KEY))
+//fmt.Println("明文：", string(plainText))
+//cryptText, _ := goEncrypt.DesCbcEncrypt(plainText, PUBLIC_KEY_BYTE_ARRAY)
+//fmt.Println("密文：", base64.StdEncoding.EncodeToString(cryptText))
+//
+//str, _ := base64.StdEncoding.DecodeString(base64.StdEncoding.EncodeToString(cryptText))
+//fmt.Println("密文：", base64.StdEncoding.EncodeToString(str))
+//newPlainText, _ := goEncrypt.DesCbcDecrypt(str, []byte("@t0!K1nl"))
+//fmt.Println("明文：", string(newPlainText))
+//fmt.Println("------------------------------")
